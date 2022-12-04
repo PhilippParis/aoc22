@@ -15,11 +15,13 @@ class Day04Test {
     void example() {
         List<String> input = Input.getExample(4);
         assertEquals(2, puzzle.part1(input));
+        assertEquals(4, puzzle.part2(input));
     }
 
     @Test
     void input() {
         List<String> input = Input.getInput(4);
         assertEquals(490, puzzle.part1(input));
+        assertEquals(921, puzzle.part2(input));
     }
 }
