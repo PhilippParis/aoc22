@@ -14,7 +14,14 @@ public class Day05 {
     public String part1(final List<String> input) {
         final var split = split(input, input.indexOf(StringUtils.EMPTY));
         final var stacks = parseStacks(split.getLeft());
-        split.getRight().stream().map(Command::parse).forEach(i -> i.apply(stacks));
+        split.getRight().stream().map(Command::parse).forEach(i -> i.applyPart1(stacks));
+        return stacks.stream().map(Stack::peek).map(String::valueOf).collect(Collectors.joining());
+    }
+
+    public String part2(final List<String> input) {
+        final var split = split(input, input.indexOf(StringUtils.EMPTY));
+        final var stacks = parseStacks(split.getLeft());
+        split.getRight().stream().map(Command::parse).forEach(i -> i.applyPart2(stacks));
         return stacks.stream().map(Stack::peek).map(String::valueOf).collect(Collectors.joining());
     }
 
