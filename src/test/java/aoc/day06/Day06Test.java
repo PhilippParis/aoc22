@@ -13,12 +13,14 @@ class Day06Test {
     void example() {
         String input = Input.getExample(6).get(0);
         assertEquals(11, puzzle.part1(input));
+        assertEquals(26, puzzle.part2(input));
     }
 
     @Test
     void input() {
         String input = Input.getInput(6).get(0);
         assertEquals(1912, puzzle.part1(input));
+        assertEquals(2122, puzzle.part2(input));
     }
 
 }
