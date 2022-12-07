@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 public class Terminal {
 
     public final Dir root = new Dir("/", null);
+
     private Dir current = root;
 
     public void execute(String line) {
