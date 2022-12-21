@@ -40,6 +40,10 @@ public abstract class Map2D<T> {
         positions.forEach(i -> set(i, value));
     }
 
+    public boolean isInBounds(Vector2D pos) {
+        return pos.getX() >= 0 && pos.getX() < width && pos.getY() >= 0 && pos.getY() < height;
+    }
+
     public T get(int x, int y) {
         return data[x][y];
     }

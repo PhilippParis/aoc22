@@ -8,4 +8,8 @@ public class Day08 {
         return new TreeMap(input).getVisibleCount();
     }
 
+    public long part2(final List<String> input) {
+        return new TreeMap(input).getHighestScenicScore();
+    }
+
 }
