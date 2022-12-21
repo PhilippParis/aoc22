@@ -9,6 +9,10 @@ import java.util.List;
 
 public class Input {
 
+    public static List<String> getExample(final String name) {
+        return getInput(String.format("examples/%s.txt", name));
+    }
+
     public static List<String> getExample(final int day) {
         return getInput(String.format("examples/%02d.txt", day));
     }

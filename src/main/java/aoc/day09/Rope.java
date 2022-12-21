@@ -2,35 +2,42 @@ package aoc.day09;
 
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.IntStream;
+
 public class Rope {
 
-    private final Vector2D head;
-    private final Vector2D tail;
+    private final List<Vector2D> knots = new ArrayList<>();
 
-    public Rope(final Vector2D head, final Vector2D tail) {
-        this.head = head;
-        this.tail = tail;
+    public Rope(final Vector2D start, final int count) {
+        IntStream.range(0, count).forEach(i -> knots.add(new Vector2D(start.getX(), start.getY())));
     }
 
-    public Rope move(final Vector2D dir) {
-        final var newHead = head.add(dir);
-        final var newTail = moveTail(newHead);
-        return new Rope(newHead, newTail);
+    public void moveHead(final Vector2D dir) {
+        knots.set(0, getHead().add(dir));
+        for (int i = 1; i < knots.size(); i++) {
+            knots.set(i, move(knots.get(i - 1), knots.get(i)));
+        }
     }
 
-    private Vector2D moveTail(final Vector2D newHead) {
-        var x = tail.getX();
-        var y = tail.getY();
-        if (tail.distanceSq(newHead) > 2) {
-            if (newHead.getX() > tail.getX()) x++;
-            if (newHead.getX() < tail.getX()) x--;
-            if (newHead.getY() > tail.getY()) y++;
-            if (newHead.getY() < tail.getY()) y--;
+    private Vector2D move(final Vector2D head, final Vector2D knot) {
+        var x = knot.getX();
+        var y = knot.getY();
+        if (knot.distanceSq(head) > 2) {
+            if (head.getX() > knot.getX()) x++;
+            if (head.getX() < knot.getX()) x--;
+            if (head.getY() > knot.getY()) y++;
+            if (head.getY() < knot.getY()) y--;
         }
         return new Vector2D(x, y);
     }
 
+    public Vector2D getHead() {
+        return knots.get(0);
+    }
+
     public Vector2D getTail() {
-        return tail;
+        return knots.get(knots.size() - 1);
     }
 }
