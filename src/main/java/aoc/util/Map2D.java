@@ -53,6 +53,10 @@ public abstract class Map2D<T> {
         return positions.stream().filter(i -> get(i).equals(value)).findFirst();
     }
 
+    public Set<Vector2D> findAll(T value) {
+        return positions.stream().filter(i -> get(i).equals(value)).collect(Collectors.toSet());
+    }
+
     public List<Vector2D> getNeighbours(final Vector2D current) {
         return DIRECTIONS.stream().map(current::add).collect(Collectors.toList());
     }

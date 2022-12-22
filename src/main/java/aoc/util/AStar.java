@@ -34,7 +34,7 @@ public class AStar {
                 }
             }
         }
-        throw new IllegalStateException("failed to find path");
+        return List.of();
     }
 
     private static List<Vector2D> reconstructPath(final Map<Vector2D, Vector2D> cameFrom, final Vector2D goal) {
