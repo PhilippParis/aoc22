@@ -3,7 +3,7 @@ package aoc.day13;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Packet {
+public class Packet implements Comparable<Packet> {
 
     private List<Packet> data = new ArrayList<>();
     private final Integer value;
@@ -30,21 +30,22 @@ public class Packet {
         return packet;
     }
 
-    public int compare(final Packet other) {
+    @Override
+    public int compareTo(final Packet other) {
         if (this.value != null && other.value != null) {
             return Integer.compare(this.value, other.value);
         } else if (this.value == null && other.value == null) {
             for (int i = 0; i < Math.min(data.size(), other.data.size()); i++) {
-                var comparison = data.get(i).compare(other.data.get(i));
+                var comparison = data.get(i).compareTo(other.data.get(i));
                 if (comparison != 0) {
                     return comparison;
                 }
             }
             return Integer.compare(data.size(), other.data.size());
         } else if (this.value == null) {
-            return this.compare(new Packet(List.of(new Packet(other.value))));
+            return this.compareTo(new Packet(List.of(new Packet(other.value))));
         } else {
-            return (new Packet(List.of(new Packet(this.value)))).compare(other);
+            return (new Packet(List.of(new Packet(this.value)))).compareTo(other);
         }
     }
 

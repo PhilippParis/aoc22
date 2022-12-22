@@ -14,8 +14,21 @@ public class Day13 {
         final var pairs = Util.split(input, StringUtils.EMPTY).stream().map(this::parse).collect(Collectors.toList());
         var result = 0;
         for (var i = 0; i < pairs.size(); i++) {
-            if (pairs.get(i).getLeft().compare(pairs.get(i).getRight()) < 0) {
+            if (pairs.get(i).getLeft().compareTo(pairs.get(i).getRight()) < 0) {
                 result += i + 1;
+            }
+        }
+        return result;
+    }
+
+    public long part2(final List<String> input) {
+        input.add("[[2]]");
+        input.add("[[6]]");
+        final var packets = input.stream().filter(i -> !i.isBlank()).map(this::parse).sorted().collect(Collectors.toList());
+        var result = 1;
+        for (var i = 0; i < packets.size(); i++) {
+            if (packets.get(i).toString().equals("[[[2]]]") || packets.get(i).toString().equals("[[[6]]]")) {
+                result *= i + 1;
             }
         }
         return result;
