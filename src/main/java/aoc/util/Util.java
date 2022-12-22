@@ -1,6 +1,10 @@
 package aoc.util;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Util {
 
@@ -11,5 +15,21 @@ public class Util {
         }
         return build.toString();
     }
+
+    public static List<List<String>> split(final List<String> input, final String separator) {
+        final var result = new ArrayList<List<String>>();
+        var current = new ArrayList<String>();
+        for (var value : input) {
+            if (value.equals(separator)) {
+                result.add(current);
+                current = new ArrayList<>();
+            } else {
+                current.add(value);
+            }
+        }
+        result.add(current);
+        return result;
+    }
+
 
 }

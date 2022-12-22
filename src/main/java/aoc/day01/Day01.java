@@ -1,5 +1,6 @@
 package aoc.day01;
 
+import aoc.util.Util;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -18,22 +19,7 @@ public class Day01 {
     }
 
     private List<Integer> getCalories(final List<String> input) {
-        return split(input).stream().map(i -> i.stream().mapToInt(Integer::parseInt).sum()).collect(Collectors.toList());
-    }
-
-    private List<List<String>> split(final List<String> input) {
-        final var result = new ArrayList<List<String>>();
-        var current = new ArrayList<String>();
-        for (var value : input) {
-            if (value.equals(StringUtils.EMPTY)) {
-                result.add(current);
-                current = new ArrayList<>();
-            } else {
-                current.add(value);
-            }
-        }
-        result.add(current);
-        return result;
+        return Util.split(input, StringUtils.EMPTY).stream().map(i -> i.stream().mapToInt(Integer::parseInt).sum()).collect(Collectors.toList());
     }
 
 }
