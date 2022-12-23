@@ -1,5 +1,6 @@
 package aoc.util;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 import java.lang.reflect.Array;
@@ -49,12 +50,26 @@ public abstract class Map2D<T> {
         positions.forEach(i -> set(i, value));
     }
 
+    public void drawStraightLine(final Vector2D from, final Vector2D to, final T value) {
+        var dir = to.subtract(from).normalize();
+        var current = from;
+        set(to, value);
+        while (!current.equals(to)) {
+            set(current, value);
+            current = current.add(dir);
+        }
+    }
+
     public Optional<Vector2D> find(T value) {
         return positions.stream().filter(i -> get(i).equals(value)).findFirst();
     }
 
     public Set<Vector2D> findAll(T value) {
         return positions.stream().filter(i -> get(i).equals(value)).collect(Collectors.toSet());
+    }
+
+    public long count(T value) {
+        return positions.stream().filter(i -> get(i).equals(value)).count();
     }
 
     public List<Vector2D> getNeighbours(final Vector2D current) {
@@ -86,4 +101,16 @@ public abstract class Map2D<T> {
     }
 
     protected abstract Class<T> getTypeClass();
+
+    @Override
+    public String toString() {
+        final var builder = new StringBuilder();
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                builder.append(get(x, y));
+            }
+            builder.append(StringUtils.LF);
+        }
+        return builder.toString();
+    }
 }
