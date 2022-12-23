@@ -3,6 +3,8 @@ package aoc.day14;
 import aoc.util.Map2D;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
+import java.util.function.Predicate;
+
 public class CaveMap extends Map2D<Character> {
 
     public static final char AIR = '.';
@@ -26,7 +28,7 @@ public class CaveMap extends Map2D<Character> {
             current = move(current);
         } while (!current.equals(prev));
         set(current, SAND);
-        return true;
+        return !current.equals(SOURCE);
     }
 
     public Vector2D move(final Vector2D pos) {

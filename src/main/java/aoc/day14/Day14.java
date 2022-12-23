@@ -10,9 +10,21 @@ import java.util.stream.Collectors;
 public class Day14 {
 
     public long part1(final List<String> input) {
-        final var map = new CaveMap(1000, 1000);
         final var lines = input.stream().flatMap(i -> parse(i).stream()).collect(Collectors.toList());
+        final var map = new CaveMap(1000, 1000);
         lines.forEach(i -> map.drawStraightLine(i.getLeft(), i.getRight(), CaveMap.ROCK));
+        while (map.step()) {
+            // do nothing
+        }
+        return map.count(CaveMap.SAND);
+    }
+
+    public long part2(final List<String> input) {
+        final var lines = input.stream().flatMap(i -> parse(i).stream()).collect(Collectors.toList());
+        final var height = lines.stream().mapToInt(i -> (int) Math.max(i.getLeft().getY(), i.getRight().getY())).max().orElse(-1) + 3;
+        final var map = new CaveMap(1000, height);
+        lines.forEach(i -> map.drawStraightLine(i.getLeft(), i.getRight(), CaveMap.ROCK));
+        map.drawStraightLine(new Vector2D(0, height - 1), new Vector2D(999, height - 1), CaveMap.ROCK);
         while (map.step()) {
             // do nothing
         }
