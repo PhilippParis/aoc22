@@ -1,14 +1,18 @@
 package aoc.day15;
 
+import com.google.common.collect.Range;
+import com.google.common.collect.RangeSet;
+import com.google.common.collect.TreeRangeSet;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.apache.commons.math3.ml.distance.ManhattanDistance;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 public class Day15 {
 
@@ -17,25 +21,40 @@ public class Day15 {
 
     public long part1(final List<String> input, final long row) {
         final var sensors = input.stream().map(this::parse).collect(Collectors.toMap(Pair::getKey, Pair::getValue));
-        return sensors.entrySet().stream()
-                .flatMap(i -> getCoveredPositions(i.getKey(), i.getValue(), row).stream().filter(k -> !sensors.containsValue(k)))
-                .distinct().count();
+        final var sensorCount = sensors.values().stream().filter(i -> i.getY() == row).distinct().count();
+        return getCoveredRanges(sensors, row).asRanges().stream().mapToLong(i -> i.upperEndpoint() - i.lowerEndpoint() + 1).sum() - sensorCount;
+    }
+
+    public long part2(final List<String> input, final long min, final long max) {
+        final var range = Range.closed(min, max);
+        final var sensors = input.stream().map(this::parse).collect(Collectors.toMap(Pair::getKey, Pair::getValue));
+        for (var y = min; y <= max; y++) {
+            final var notCovered = getCoveredRanges(sensors, y).complement().subRangeSet(range);
+            if (!notCovered.isEmpty()) {
+                return LongStream.rangeClosed(min, max).filter(notCovered::contains).findFirst().orElse(-1) * 4000000 + y;
+            }
+        }
+        return -1;
     }
 
     private long getDistance(Vector2D from, Vector2D to) {
         return (long) DISTANCE.compute(from.toArray(), to.toArray());
     }
 
-    private Set<Vector2D> getCoveredPositions(final Vector2D sensor, final Vector2D beacon, final long row) {
-        final var result = new HashSet<Vector2D>();
-        final var distance = getDistance(sensor, beacon);
-        for (var x = sensor.getX() - distance; x < sensor.getX() + distance; x++) {
-            final var pos = new Vector2D(x, row);
-            if (getDistance(sensor, pos) <= distance) {
-                result.add(pos);
-            }
+    private RangeSet<Long> getCoveredRanges(final Map<Vector2D, Vector2D> sensors, final long row) {
+        return TreeRangeSet.create(sensors.entrySet().stream()
+                .map(i -> getCoveredRange(i.getKey(), i.getValue(), row))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toSet()));
+    }
+
+    private Optional<Range<Long>> getCoveredRange(final Vector2D sensor, final Vector2D beacon, final long row) {
+        final var xDist = getDistance(sensor, beacon) - Math.abs(row - sensor.getY());
+        if (xDist <= 0) {
+            return Optional.empty();
         }
-        return result;
+        return Optional.of(Range.closed((long) (sensor.getX() - xDist), (long) (sensor.getX() + xDist)));
     }
 
     private Pair<Vector2D, Vector2D> parse(final String input) {
